@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Flipable Flashcard</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: sans-serif;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+            .flashcard.flipped {
+                transform: rotateY(180deg);
+            }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            font-size: 1.5em;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .front {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .back {
+            background-color: #e0f7fa;
+            color: #00796b;
+            transform: rotateY(180deg);
+            border: 1px solid #b2ebf2;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+            .nav-button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="flashcard-container">
+        <div id="flashcard" class="flashcard" onclick="flipCard()">
+            <div id="front-face" class="face front"></div>
+            <div id="back-face" class="face back"></div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-button" onclick="previousCard()">Previous</button>
+        <button class="nav-button" onclick="nextCard()">Next</button>
+    </div>
+
+    <script>
+        const flashcardDiv = document.getElementById('flashcard');
+        const frontFaceDiv = document.getElementById('front-face');
+        const backFaceDiv = document.getElementById('back-face');
+        let currentIndex = 0;
+        const flashcardData = [
+            { front: "Term 1", back: "Definition of Term 1" },
+            { front: "Term 2", back: "Definition of Term 2" },
+            { front: "Another Term", back: "The meaning of this term" },
+            { front: "Example Term", back: "A sample definition" },
+            { front: "Last One", back: "The final definition in the set" }
+            // Add more flashcard objects here
+        ];
+
+        function updateCard() {
+            if (flashcardData.length > 0) { // Ensure there is data
+                frontFaceDiv.textContent = flashcardData[currentIndex].front;
+                backFaceDiv.textContent = flashcardData[currentIndex].back;
+                flashcardDiv.classList.remove('flipped'); // Ensure the front is shown when updating
+            } else {
+                frontFaceDiv.textContent = "No cards available.";
+                backFaceDiv.textContent = "Add data to the flashcardData array.";
+            }
+        }
+
+        function flipCard() {
+            flashcardDiv.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (flashcardData.length > 0) {
+                currentIndex = (currentIndex + 1) % flashcardData.length;
+                updateCard();
+            }
+        }
+
+        function previousCard() {
+            if (flashcardData.length > 0) {
+                currentIndex = (currentIndex - 1 + flashcardData.length) % flashcardData.length;
+                updateCard();
+            }
+        }
+
+        // Initial load
+        updateCard();
+    </script>
+
+</body>
+</html>
